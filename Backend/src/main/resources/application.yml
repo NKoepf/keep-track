@@ -1,0 +1,18 @@
+spring:
+  application:
+    name: Keep-Track
+  jpa:
+    database: postgresql
+    database-platform: org.hibernate.dialect.PostgreSQL95Dialect
+    generate-ddl: true
+    hibernate:
+      ddl-auto: update
+
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/keep_track
+    username: postgres
+    password: pWnWXMJqqQFmLVGy7KmN
+    driverClassName: org.postgresql.Driver
+  liquibase:
+    changeLog: classpath:/db/changelog/db.changelog-master.xml
