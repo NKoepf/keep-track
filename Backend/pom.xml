@@ -18,6 +18,7 @@
         <repackage.classifier/>
         <spring-native.version>0.12.1</spring-native.version>
         <liquibase.version>4.15.0</liquibase.version>
+        <openapi.ui.version>1.6.11</openapi.ui.version>
     </properties>
 
 
@@ -62,7 +63,7 @@
         <dependency>
             <groupId>org.springdoc</groupId>
             <artifactId>springdoc-openapi-ui</artifactId>
-            <version>1.6.11</version>
+            <version>${openapi.ui.version}</version>
         </dependency>
     </dependencies>
 
@@ -116,7 +117,7 @@
                     <!--set values for Liquibase properties and settings
                     for example, the location of a properties file to use-->
                     <propertyFile>src/main/resources/application.yml</propertyFile>
-                    <outputChangeLogFile>src/main/resources/db/updateDB.xml</outputChangeLogFile>
+                    <outputChangeLogFile>src/main/resources/db/changelog/updateDB.xml</outputChangeLogFile>
                 </configuration>
                 <dependencies>
                     <!--set up any dependencies for Liquibase to function in your

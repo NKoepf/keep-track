@@ -1,22 +1,30 @@
 package com.de.nkoepf.backend.product;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+
 import javax.persistence.*;
 
 @Entity
 @Table(name = "product")
+@NoArgsConstructor
+@Getter
+@Setter
+@ToString
 public class Product {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "bar_code")
     private String barCode;
 
-    @Column(name = "product_name")
+    @JsonProperty("productName")
     private String productName;
 
     @Column
     private String manufacturer;
-
 
 }
