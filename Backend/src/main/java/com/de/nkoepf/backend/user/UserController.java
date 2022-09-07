@@ -1,7 +1,7 @@
 package com.de.nkoepf.backend.user;
 
 import com.de.nkoepf.backend.api.UserApi;
-import com.de.nkoepf.backend.api.model.StorageDto;
+import com.de.nkoepf.backend.api.model.StorageOverviewDto;
 import com.de.nkoepf.backend.storage.StorageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -14,17 +14,9 @@ import java.util.List;
 public class UserController implements UserApi {
 
     private final StorageService storageService;
-    private final UserService userService;
 
     @Override
-    public ResponseEntity<StorageDto> getStorageOfUserByStorageId(String userId, String storageId) {
-        return UserApi.super.getStorageOfUserByStorageId(userId, storageId);
-    }
-
-    @Override
-    public ResponseEntity<List<StorageDto>> getStoragesOfUser(String userId) {
-
-
-        return UserApi.super.getStoragesOfUser(userId);
+    public ResponseEntity<List<StorageOverviewDto>> getStorageOverviewsOfUser(Long userId) {
+        return ResponseEntity.ok(storageService.getStorageOverviewsForUser(userId));
     }
 }

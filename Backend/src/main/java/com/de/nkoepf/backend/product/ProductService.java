@@ -15,11 +15,22 @@ public class ProductService {
     private final ProductRepository productRepository;
     private final ObjectMapper mapper;
 
+    /***
+     * Get the ProductDto of the given barcode
+     * @param barCode Barcode of the requested product
+     * @return ProductDto corresponding to the given barcode
+     */
     ProductDto getProductDto(String barCode) {
         var product = productRepository.findProductByBarCode(barCode);
         return mapper.convertValue(product, ProductDto.class);
     }
 
+    /***
+     * Add new product to the system. If it is already in the database, process will be skipped.
+     * @param productDto Product to be added to the database
+     * @return HTTP 200 if successfully added to database.<br>
+     * HTTP 409 if the product is already in the database.
+     */
     ResponseEntity<String> addProduct(ProductDto productDto) {
         if (productRepository.findProductByBarCode(productDto.getBarCode()) == null) {
             Product savedProduct = productRepository.save(mapper.convertValue(productDto, Product.class));

@@ -8,6 +8,6 @@ import java.util.List;
 @Repository
 public interface StorageEntryRepository extends CrudRepository<StorageEntry, Long> {
 
-    List<StorageEntry> findAllStorageEntryById(Long id);
+    List<StorageEntry> findAllStorageEntryByStorageId(Long storageId);
 
 }

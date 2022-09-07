@@ -50,14 +50,15 @@ paths:
     get:
       tags:
         - User
-      operationId: getStoragesOfUser
-      description: Returns all storages of given user
+      operationId: getStorageOverviewsOfUser
+      description: Returns all storage overviews of given user
       parameters:
         - name: userId
           in: path
           required: true
           schema:
-            type: string
+            type: integer
+            format: int64
       responses:
         '200':
           description: OK
@@ -66,26 +67,22 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Storage'
+                  $ref: '#/components/schemas/StorageOverview'
         '500':
           description: Server error
-  /user/{userId}/storage/{storageId}:
+  /storage/{storageId}:
     get:
       tags:
-        - User
-      operationId: getStorageOfUserByStorageId
-      description: Returns specific storage from user
+        - Storage
+      operationId: getStorageByStorageId
+      description: Returns specific storage for storage id
       parameters:
-        - name: userId
-          in: path
-          required: true
-          schema:
-            type: string
         - name: storageId
           in: path
           required: true
           schema:
-            type: string
+            type: integer
+            format: int64
       responses:
         '200':
           description: OK
@@ -95,7 +92,6 @@ paths:
                 $ref: '#/components/schemas/Storage'
         '500':
           description: Server error
-
 
 components:
   schemas:
@@ -111,7 +107,39 @@ components:
     Storage:
       type: object
       properties:
-        products:
+        id:
           type: integer
-          additionalProperties:
-            $ref: '#/components/schemas/Product'
+          format: int64
+        name:
+          type: string
+        owner:
+          type: integer
+          format: int64
+        products:
+          type: array
+          items:
+            $ref: '#/components/schemas/StorageEntry'
+    StorageOverview:
+      type: object
+      properties:
+        name:
+          type: string
+        owner:
+          type: integer
+          format: int64
+        id:
+          type: integer
+          format: int64
+    StorageEntry:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        storageId:
+          type: integer
+          format: int64
+        product:
+          $ref: '#/components/schemas/Product'
+        amount:
+          type: integer
