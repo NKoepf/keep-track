@@ -2,8 +2,9 @@ package com.de.nkoepf.backend.user;
 
 import org.springframework.data.repository.CrudRepository;
 
+import java.util.Optional;
+
 public interface UserRepository extends CrudRepository<StorageUser, Long> {
 
-    StorageUser findStorageUserById(Long id);
-
+    Optional<StorageUser> findByEmail(String email);
 }
