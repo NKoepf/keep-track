@@ -1,5 +1,6 @@
 package com.de.nkoepf.backend.user;
 
+import com.de.nkoepf.backend.auth.JwtUtil;
 import com.de.nkoepf.backend.token.ConfirmationToken;
 import com.de.nkoepf.backend.token.ConfirmationTokenService;
 import lombok.RequiredArgsConstructor;
@@ -17,17 +18,13 @@ public class LoginController {
 
     private final UserService userService;
     private final ConfirmationTokenService confirmationTokenService;
+    private final JwtUtil jwtUtil;
 
     @GetMapping("/sign-in")
     String signIn(Model model) {
         model.addAttribute("user", new StorageUser());
         return "sign-in";
     }
-
-//    @PostMapping("/sign-in")
-//    String signIn(@ModelAttribute StorageUser user){
-//
-//    }
 
     @GetMapping("/sign-up")
     String signUp(Model model) {
@@ -47,9 +44,7 @@ public class LoginController {
     String confirmMail(@RequestParam("token") String token) {
 
         Optional<ConfirmationToken> optionalConfirmationToken = confirmationTokenService.findConfirmationTokenByToken(token);
-
         optionalConfirmationToken.ifPresent(userService::confirmUser);
-
         return "/sign-in";
     }
 

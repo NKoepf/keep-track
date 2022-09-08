@@ -19,6 +19,7 @@
         <spring-native.version>0.12.1</spring-native.version>
         <liquibase.version>4.15.0</liquibase.version>
         <openapi.ui.version>1.6.11</openapi.ui.version>
+        <jjwt.version>0.11.5</jjwt.version>
     </properties>
 
 
@@ -38,6 +39,21 @@
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-api</artifactId>
+            <version>${jjwt.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-impl</artifactId>
+            <version>${jjwt.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-jackson</artifactId>
+            <version>${jjwt.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>

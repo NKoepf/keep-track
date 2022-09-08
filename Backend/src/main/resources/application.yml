@@ -53,3 +53,7 @@ logging:
     console: '%date{"yyyy-MM-dd HH:mm:ss,SSS", Europe/Berlin} %-5level [%thread] %logger : %msg%n'
   level:
     root: info
+
+keep-track:
+  jwt-secret: ${JWT_SECRET}
+  jwt-expiration-ms: 86400000 #1day

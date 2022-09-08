@@ -5,6 +5,8 @@ import com.de.nkoepf.backend.token.ConfirmationToken;
 import com.de.nkoepf.backend.token.ConfirmationTokenService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.mail.SimpleMailMessage;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -61,9 +63,22 @@ public class UserService implements UserDetailsService {
         mailMessage.setSubject("Mail Confirmation Link!");
         mailMessage.setFrom("<MAIL>");
         mailMessage.setText(
-                "Thank you for registering. Please click on the below link to activate your account." + "http://localhost:8080/sign-up/confirm?token="
+                "Thank you for registering. Please click on the below link to activate your account." + "http://localhost:8001/api/sign-up/confirm?token="
                         + token);
-
         emailSenderService.sendEmail(mailMessage);
+    }
+
+
+    public Authentication isAuthenticated(UsernamePasswordAuthenticationToken token) {
+        final String encryptedPassword = bCryptPasswordEncoder.encode(token.getCredentials().toString());
+        Optional<StorageUser> user = userRepository.findByEmail(token.getPrincipal().toString());
+
+        if (user.isPresent()
+                && user.get().getEmail().equals(token.getPrincipal().toString())
+                && user.get().getPassword().equals(encryptedPassword)
+                && Boolean.TRUE.equals(user.get().getEnabled())) {
+            token.setAuthenticated(true);
+        }
+        return token;
     }
 }

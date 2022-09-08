@@ -19,4 +19,5 @@ public class UserController implements UserApi {
     public ResponseEntity<List<StorageOverviewDto>> getStorageOverviewsOfUser(Long userId) {
         return ResponseEntity.ok(storageService.getStorageOverviewsForUser(userId));
     }
+
 }
