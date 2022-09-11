@@ -12,6 +12,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -25,11 +27,11 @@ public class StorageService {
 
     /***
      * Get overview objects for all storages of the specific user
-     * @param userId ID of the user, for which all storage overviews will be retrieved
+     * @param email email of the user, for which all storage overviews will be retrieved
      * @return all storage overviews for given user id
      */
-    public List<StorageOverviewDto> getStorageOverviewsForUser(Long userId) {
-        List<Storage> storagesForUser = storageRepository.findAllByOwner_Id(userId);
+    public List<StorageOverviewDto> getStorageOverviewsForUser(String email) {
+        List<Storage> storagesForUser = storageRepository.findAllByOwner_Email(email);
         List<StorageOverviewDto> overviews = new ArrayList<>();
 
         storagesForUser.forEach(storage -> {
@@ -48,8 +50,11 @@ public class StorageService {
      * @return requested storage as StorageDto
      */
     public StorageDto getStorage(Long storageId) {
-        Storage storage = storageRepository.findStorageById(storageId);
-        return storageToStorageDto(storage);
+        Optional<Storage> storage = storageRepository.findStorageById(storageId);
+        if (storage.isEmpty()) {
+            throw new NoSuchElementException();
+        }
+        return storageToStorageDto(storage.get());
     }
 
     /***

@@ -36,7 +36,21 @@ public class UserService implements UserDetailsService {
         }
     }
 
-    void signUpUser(StorageUser user) {
+    /***
+     * Register new User in System
+     * @param user will be registered
+     * @throws IllegalArgumentException if the given user is already in the system
+     */
+    void signUpUser(StorageUser user) throws IllegalArgumentException {
+        Optional<StorageUser> storageUser = userRepository.findByEmail(user.getEmail());
+        if (storageUser.isPresent()) {
+            if (storageUser.get().getEnabled()) {
+                throw new IllegalArgumentException();
+            } else {
+                Optional<ConfirmationToken> token = confirmationTokenService.findConfirmationTokenByUser(user);
+                sendConfirmationMail(user.getEmail(), token.get().getConfirmationToken());
+            }
+        }
 
         final String encryptedPassword = bCryptPasswordEncoder.encode(user.getPassword());
         user.setPassword(encryptedPassword);
@@ -48,16 +62,13 @@ public class UserService implements UserDetailsService {
     }
 
     void confirmUser(ConfirmationToken confirmationToken) {
-
         final StorageUser user = confirmationToken.getUser();
         user.setEnabled(true);
         userRepository.save(user);
         confirmationTokenService.deleteConfirmationToken(confirmationToken.getId());
-
     }
 
     void sendConfirmationMail(String userMail, String token) {
-
         final SimpleMailMessage mailMessage = new SimpleMailMessage();
         mailMessage.setTo(userMail);
         mailMessage.setSubject("Mail Confirmation Link!");
@@ -68,16 +79,18 @@ public class UserService implements UserDetailsService {
         emailSenderService.sendEmail(mailMessage);
     }
 
-
+    /***
+     * Checks if token of request is still valid
+     * @param token contains credentials of token request. Checks if current token is still valid
+     * @return token with authenticated flag, according to authentication status of user
+     */
     public Authentication isAuthenticated(UsernamePasswordAuthenticationToken token) {
-        final String encryptedPassword = bCryptPasswordEncoder.encode(token.getCredentials().toString());
         Optional<StorageUser> user = userRepository.findByEmail(token.getPrincipal().toString());
-
-        if (user.isPresent()
-                && user.get().getEmail().equals(token.getPrincipal().toString())
-                && user.get().getPassword().equals(encryptedPassword)
-                && Boolean.TRUE.equals(user.get().getEnabled())) {
-            token.setAuthenticated(true);
+        if (user.isEmpty()
+                || !user.get().getEmail().equals(token.getPrincipal().toString())
+                || !bCryptPasswordEncoder.matches(token.getCredentials().toString(), user.get().getPassword())
+                || !Boolean.TRUE.equals(user.get().getEnabled())) {
+            token.setAuthenticated(false);
         }
         return token;
     }

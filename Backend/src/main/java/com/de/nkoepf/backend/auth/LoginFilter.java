@@ -1,5 +1,7 @@
 package com.de.nkoepf.backend.auth;
 
+import com.de.nkoepf.backend.api.model.LoginRequestDto;
+import com.de.nkoepf.backend.api.model.LoginResponseDto;
 import com.de.nkoepf.backend.user.StorageUser;
 import com.de.nkoepf.backend.user.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -38,7 +40,7 @@ public class LoginFilter extends AbstractAuthenticationProcessingFilter {
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException, IOException {
-        LoginRequestModel loginRequestModel = new ObjectMapper().readValue(request.getInputStream(), LoginRequestModel.class);
+        LoginRequestDto loginRequestModel = new ObjectMapper().readValue(request.getInputStream(), LoginRequestDto.class);
         log.info("login attempt for user {}", loginRequestModel.getEmail());
         return doAuthentication(loginRequestModel.getEmail(), loginRequestModel.getPassword());
     }
@@ -46,27 +48,34 @@ public class LoginFilter extends AbstractAuthenticationProcessingFilter {
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain,
                                             Authentication auth) throws IOException {
-        UserDetails userDetails =
-                userService.loadUserByUsername(auth.getPrincipal().toString());
+        if (!auth.isAuthenticated()) {
+            log.info("failed login attempt for user {}", auth.getPrincipal());
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+            response.getWriter().flush();
+        } else {
+            UserDetails userDetails =
+                    userService.loadUserByUsername(auth.getPrincipal().toString());
 
-        UserTokenData userTokenData = UserTokenData.builder()
-                .email(userDetails.getUsername())
-                .surName(((StorageUser) userDetails).getSurname())
-                .name(((StorageUser) userDetails).getName())
-                .build();
+            UserTokenData userTokenData = UserTokenData.builder()
+                    .email(userDetails.getUsername())
+                    .surName(((StorageUser) userDetails).getSurname())
+                    .name(((StorageUser) userDetails).getName())
+                    .build();
 
-        final String jwt = jwtUtil.generateToken(userTokenData);
+            final String jwt = jwtUtil.generateToken(userTokenData);
 
-        final LoginResponseModel loginResponseModel = LoginResponseModel.builder()
-                .jwt(jwt)
-                .build();
+            final LoginResponseDto loginResponseModel = LoginResponseDto.builder()
+                    .jwt(jwt)
+                    .build();
 
-        String body = new ObjectMapper().writeValueAsString(loginResponseModel);
+            String body = new ObjectMapper().writeValueAsString(loginResponseModel);
 
-        response.setStatus(HttpServletResponse.SC_OK);
-        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-        response.getWriter().write(body);
-        response.getWriter().flush();
+            response.setStatus(HttpServletResponse.SC_OK);
+            response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+            response.getWriter().write(body);
+            response.getWriter().flush();
+        }
     }
 
     private Authentication doAuthentication(String username, String password) {

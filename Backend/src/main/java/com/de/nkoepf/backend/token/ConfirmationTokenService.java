@@ -1,6 +1,7 @@
 package com.de.nkoepf.backend.token;
 
 
+import com.de.nkoepf.backend.user.StorageUser;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -22,5 +23,9 @@ public class ConfirmationTokenService {
 
     public Optional<ConfirmationToken> findConfirmationTokenByToken(String token) {
         return confirmationTokenRepository.findConfirmationTokenByConfirmationToken(token);
+    }
+
+    public Optional<ConfirmationToken> findConfirmationTokenByUser(StorageUser user) {
+        return confirmationTokenRepository.findConfirmationTokenByUser(user);
     }
 }

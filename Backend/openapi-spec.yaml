@@ -5,6 +5,7 @@ info:
   version: 1.0.0
 
 paths:
+  # product controller
   /product:
     get:
       tags:
@@ -19,7 +20,7 @@ paths:
             type: string
       responses:
         '200':
-          description: OK
+          description: Successfully retrieved product
           content:
             application/json:
               schema:
@@ -39,29 +40,24 @@ paths:
               $ref: '#/components/schemas/Product'
       responses:
         '200':
-          description: OK
+          description: Successfully added new product
           content:
             application/json:
               schema:
                 type: string
         '500':
           description: Server error
-  /user/{userId}/storages:
+
+  # storage controller
+  /storages:
     get:
       tags:
-        - User
+        - Storage
       operationId: getStorageOverviewsOfUser
       description: Returns all storage overviews of given user
-      parameters:
-        - name: userId
-          in: path
-          required: true
-          schema:
-            type: integer
-            format: int64
       responses:
         '200':
-          description: OK
+          description: Retrieved all storages for given user
           content:
             application/json:
               schema:
@@ -85,13 +81,58 @@ paths:
             format: int64
       responses:
         '200':
-          description: OK
+          description: Successfully retrieved storage
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Storage'
         '500':
           description: Server error
+
+  # user controller
+  /user/register:
+    post:
+      tags:
+        - User
+      operationId: addUser
+      description: Registers new User to the system
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterRequest'
+      responses:
+        '200':
+          description: User successfully registered
+          content:
+            application/json:
+              schema:
+                type: string
+        '500':
+          description: Server error
+  /user/register/confirm:
+    get:
+      tags:
+        - User
+      operationId: confirmRegistration
+      description: Confirm a pending user registration
+      parameters:
+        - name: token
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: User successfully confirmed
+          content:
+            application/json:
+              schema:
+                type: string
+        '500':
+          description: Server error
+
 
 components:
   schemas:
@@ -143,3 +184,35 @@ components:
           $ref: '#/components/schemas/Product'
         amount:
           type: integer
+
+    LoginRequest:
+      type: object
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+    LoginResponse:
+      type: object
+      properties:
+        jwt:
+          type: string
+    RegisterRequest:
+      type: object
+      required:
+        - email
+        - password
+        - name
+        - surname
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+        name:
+          type: string
+        surname:
+          type: string

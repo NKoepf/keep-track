@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -19,7 +19,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @RequiredArgsConstructor
 public class SecurityConfiguration {
 
-    private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final UserService userService;
     private final JwtUtil jwtUtil;
     private final JwtRequestFilter jwtRequestFilter;
@@ -27,17 +26,25 @@ public class SecurityConfiguration {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-
-
+        // @formatter:off
         http.authorizeRequests()
-                .antMatchers("/sign-up/**", "/sign-in/**")
+                .antMatchers("/user/register/**")
                 .permitAll()
-                .anyRequest()
-                .authenticated()
-                .and()
+            .and()
+                .authorizeRequests()
+                .anyRequest().authenticated()
+            .and()
+                .sessionManagement()
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+            .and()
+//                .csrf().requireCsrfProtectionMatcher(request->
+//                    !request.getServletPath().contains("/login"))
+//            .and()
+                .csrf().disable()
                 .addFilterBefore(new LoginFilter("/login", jwtUtil, authenticationManager, userService), UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)
-                .exceptionHandling().authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED));
+            .exceptionHandling().authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED));
         return http.build();
+        // @formatter:on
     }
 }

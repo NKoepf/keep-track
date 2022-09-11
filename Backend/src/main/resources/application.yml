@@ -48,7 +48,7 @@ springdoc:
 
 logging:
   file:
-    name: keep-track.log
+    name: logs/keep-track.log
   pattern:
     console: '%date{"yyyy-MM-dd HH:mm:ss,SSS", Europe/Berlin} %-5level [%thread] %logger : %msg%n'
   level:
