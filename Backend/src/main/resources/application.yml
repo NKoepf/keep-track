@@ -25,9 +25,9 @@ spring:
     username: postgres
     password: pWnWXMJqqQFmLVGy7KmN
     driverClassName: org.postgresql.Driver
-  liquibase:
-    changeLog: classpath:/db/db.changelog-master.xml
-    enabled: false
+  #  liquibase:
+  #    changeLog: classpath:/db/db.changelog-master.xml
+  #    enabled: false
   mail:
     host: smtp.gmail.com
     port: 587

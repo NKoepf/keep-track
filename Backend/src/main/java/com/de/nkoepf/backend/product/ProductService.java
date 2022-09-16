@@ -42,4 +42,17 @@ public class ProductService {
     }
 
 
+    public void changeProduct(String barCode, ProductDto productDto) {
+        Product product = productRepository.findProductByBarCode(productDto.getBarCode());
+        if (product != null) {
+            product.setBarCode(barCode);
+            product.setProductName(productDto.getProductName());
+            product.setManufacturer(productDto.getManufacturer());
+
+            productRepository.save(product);
+        } else {
+            throw new IllegalArgumentException();
+        }
+
+    }
 }

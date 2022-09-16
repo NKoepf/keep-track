@@ -75,11 +75,6 @@
             <optional>true</optional>
         </dependency>
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
             <version>42.5.0</version>
@@ -88,11 +83,11 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.liquibase</groupId>
-            <artifactId>liquibase-core</artifactId>
-            <version>${liquibase.version}</version>
-        </dependency>
+        <!--        <dependency>-->
+        <!--            <groupId>org.liquibase</groupId>-->
+        <!--            <artifactId>liquibase-core</artifactId>-->
+        <!--            <version>${liquibase.version}</version>-->
+        <!--        </dependency>-->
         <dependency>
             <groupId>org.springdoc</groupId>
             <artifactId>springdoc-openapi-ui</artifactId>
@@ -101,6 +96,22 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+
+        <!--        TEST            -->
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 
@@ -169,28 +180,28 @@
                     </execution>
                 </executions>
             </plugin>
-            <plugin>
-                <!--start with basic information to get Liquibase plugin:
-                include <groupId>, <artifactID>, and <version> elements-->
-                <groupId>org.liquibase</groupId>
-                <artifactId>liquibase-maven-plugin</artifactId>
-                <version>${liquibase.version}</version>
-                <configuration>
-                    <!--set values for Liquibase properties and settings
-                    for example, the location of a properties file to use-->
-                    <propertyFile>src/main/resources/application.yml</propertyFile>
-                    <outputChangeLogFile>src/main/resources/db/changelog/updateDB.xml</outputChangeLogFile>
-                </configuration>
-                <dependencies>
-                    <!--set up any dependencies for Liquibase to function in your
-                    environment for example, a database-specific plugin-->
-                    <dependency>
-                        <groupId>org.liquibase.ext</groupId>
-                        <artifactId>liquibase-postgresql</artifactId>
-                        <version>${liquibase.version}</version>
-                    </dependency>
-                </dependencies>
-            </plugin>
+            <!--            <plugin>-->
+            <!--                &lt;!&ndash;start with basic information to get Liquibase plugin:-->
+            <!--                include <groupId>, <artifactID>, and <version> elements&ndash;&gt;-->
+            <!--                <groupId>org.liquibase</groupId>-->
+            <!--                <artifactId>liquibase-maven-plugin</artifactId>-->
+            <!--                <version>${liquibase.version}</version>-->
+            <!--                <configuration>-->
+            <!--                    &lt;!&ndash;set values for Liquibase properties and settings-->
+            <!--                    for example, the location of a properties file to use&ndash;&gt;-->
+            <!--                    <propertyFile>src/main/resources/application.yml</propertyFile>-->
+            <!--                    <outputChangeLogFile>src/main/resources/db/changelog/updateDB.xml</outputChangeLogFile>-->
+            <!--                </configuration>-->
+            <!--                <dependencies>-->
+            <!--                    &lt;!&ndash;set up any dependencies for Liquibase to function in your-->
+            <!--                    environment for example, a database-specific plugin&ndash;&gt;-->
+            <!--                    <dependency>-->
+            <!--                        <groupId>org.liquibase.ext</groupId>-->
+            <!--                        <artifactId>liquibase-postgresql</artifactId>-->
+            <!--                        <version>${liquibase.version}</version>-->
+            <!--                    </dependency>-->
+            <!--                </dependencies>-->
+            <!--            </plugin>-->
             <plugin>
                 <groupId>org.openapitools</groupId>
                 <artifactId>openapi-generator-maven-plugin</artifactId>

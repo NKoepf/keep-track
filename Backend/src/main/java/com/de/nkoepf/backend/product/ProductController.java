@@ -23,4 +23,19 @@ public class ProductController implements ProductApi {
     public ResponseEntity<String> postProduct(ProductDto productDto) {
         return productService.addProduct(productDto);
     }
+
+    /**
+     * PATCH /product
+     * Change product
+     *
+     * @param barCode    (required)
+     * @param productDto (required)
+     * @return Successfully change product (status code 200)
+     * or Server error (status code 500)
+     */
+    @Override
+    public ResponseEntity<String> changeProduct(String barCode, ProductDto productDto) {
+        productService.changeProduct(barCode, productDto);
+        return ResponseEntity.ok("updated product " + productDto.getProductName());
+    }
 }

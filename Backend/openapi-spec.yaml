@@ -47,8 +47,34 @@ paths:
                 type: string
         '500':
           description: Server error
+    patch:
+      tags:
+        - Product
+      operationId: changeProduct
+      description: Change product
+      parameters:
+        - name: barCode
+          in: query
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Product'
+      responses:
+        '200':
+          description: Successfully change product
+          content:
+            application/json:
+              schema:
+                type: string
+        '500':
+          description: Server error
 
-  # storage controller
+        # storage controller
   /storages:
     get:
       tags:
