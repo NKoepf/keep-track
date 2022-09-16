@@ -94,22 +94,6 @@ public class UserService implements UserDetailsService {
         return token;
     }
 
-//    /***
-//     * Checks if token of request is still valid
-//     * @param token contains credentials of token request. Checks if current token is still valid
-//     * @return token with authenticated flag, according to authentication status of user
-//     */
-//    public Authentication isAuthenticated(UsernamePasswordAuthenticationToken token) {
-//        Optional<StorageUser> user = userRepository.findByEmail(token.getPrincipal().toString());
-//        if (user.isEmpty()
-//                || !user.get().getEmail().equals(token.getPrincipal().toString())
-//                || !bCryptPasswordEncoder.matches(token.getCredentials().toString(), user.get().getPassword())
-//                || !Boolean.TRUE.equals(user.get().getEnabled())) {
-//            token.setAuthenticated(false);
-//        }
-//        return token;
-//    }
-
     /***
      * Checks if token of request is still valid
      * @param user user in the system corresponding to the given mail address
@@ -118,8 +102,6 @@ public class UserService implements UserDetailsService {
      * @return boolean if user given token is valid or invalid (false credentials, expired token or user not yet enabled)
      */
     public boolean isAuthenticated(StorageUser user, String email, String password) {
-        boolean pass = bCryptPasswordEncoder.matches(password, user.getPassword());
-
         if (!user.getEmail().equals(email)
                 || !bCryptPasswordEncoder.matches(password, user.getPassword())
                 || !Boolean.TRUE.equals(user.getEnabled())) {
@@ -128,6 +110,11 @@ public class UserService implements UserDetailsService {
         return true;
     }
 
+    /***
+     * Change role of given user
+     * @param email email of the user
+     * @param role role to set for the user
+     */
     public void changeRole(String email, UserRoleDto role) {
         Optional<StorageUser> user = userRepository.findByEmail(email);
         if (user.isPresent()) {

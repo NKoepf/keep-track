@@ -16,4 +16,6 @@ public interface StorageRepository extends CrudRepository<Storage, Long> {
 
     @Query(nativeQuery = true, value = "SELECT id FROM keep_track.public.storage WHERE owner_id = :userId")
     List<Long> getStorageIdsOfUser(Long userId);
+
+    boolean existsStorageByNameAndOwnerId(String storageName, Long ownerId);
 }

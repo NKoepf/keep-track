@@ -10,4 +10,9 @@ public interface StorageEntryRepository extends CrudRepository<StorageEntry, Lon
 
     List<StorageEntry> findAllStorageEntryByStorageId(Long storageId);
 
+    StorageEntry findStorageEntryByStorageAndProduct_BarCode(Long Storage, String barcode);
+
+    Boolean existsStorageEntriesByStorage_IdAndAndProduct_BarCode(Long storageId, String barcode);
+
+    void deleteStorageEntryByStorage_IdAndProduct_BarCode(Long storageId, String barcode);
 }
