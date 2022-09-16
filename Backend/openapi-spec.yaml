@@ -133,6 +133,32 @@ paths:
                 type: string
         '500':
           description: Server error
+  /user/role:
+    patch:
+      tags:
+        - User
+      operationId: changeUserRole
+      description: change user role
+      parameters:
+        - name: email
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: role
+          in: query
+          required: true
+          schema:
+            $ref: '#/components/schemas/UserRole'
+      responses:
+        '200':
+          description: User successfully upgraded to admin
+          content:
+            application/json:
+              schema:
+                type: string
+        '500':
+          description: Server error
   /user/register:
     post:
       tags:
@@ -259,3 +285,8 @@ components:
           type: string
         surname:
           type: string
+    UserRole:
+      type: string
+      enum:
+        - ADMIN
+        - USER

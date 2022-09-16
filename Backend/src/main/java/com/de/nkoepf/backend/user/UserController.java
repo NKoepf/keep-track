@@ -2,6 +2,7 @@ package com.de.nkoepf.backend.user;
 
 import com.de.nkoepf.backend.api.UserApi;
 import com.de.nkoepf.backend.api.model.RegisterRequestDto;
+import com.de.nkoepf.backend.api.model.UserRoleDto;
 import com.de.nkoepf.backend.token.ConfirmationToken;
 import com.de.nkoepf.backend.token.ConfirmationTokenService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -47,5 +48,12 @@ public class UserController implements UserApi {
     public ResponseEntity<String> removeUser(String email) {
         userService.removeUser(email);
         return ResponseEntity.ok("User " + email + " successfully removed");
+    }
+
+    @Override
+    @Transactional
+    public ResponseEntity<String> changeUserRole(String email, UserRoleDto role) {
+        userService.changeRole(email, role);
+        return ResponseEntity.ok("user " + email + " authority changed to: " + role);
     }
 }

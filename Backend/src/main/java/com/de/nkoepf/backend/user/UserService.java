@@ -1,5 +1,6 @@
 package com.de.nkoepf.backend.user;
 
+import com.de.nkoepf.backend.api.model.UserRoleDto;
 import com.de.nkoepf.backend.mail.EmailSenderService;
 import com.de.nkoepf.backend.token.ConfirmationToken;
 import com.de.nkoepf.backend.token.ConfirmationTokenService;
@@ -125,5 +126,16 @@ public class UserService implements UserDetailsService {
             return false;
         }
         return true;
+    }
+
+    public void changeRole(String email, UserRoleDto role) {
+        Optional<StorageUser> user = userRepository.findByEmail(email);
+        if (user.isPresent()) {
+            user.get().setUserRole(role);
+            userRepository.save(user.get());
+        } else {
+            throw new IllegalArgumentException("No user for given email " + email);
+        }
+
     }
 }

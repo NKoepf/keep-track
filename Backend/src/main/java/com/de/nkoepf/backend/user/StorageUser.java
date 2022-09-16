@@ -1,5 +1,6 @@
 package com.de.nkoepf.backend.user;
 
+import com.de.nkoepf.backend.api.model.UserRoleDto;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -31,7 +32,7 @@ public class StorageUser implements UserDetails {
     private String password;
 
     @Builder.Default
-    private UserRole userRole = UserRole.USER;
+    private UserRoleDto userRole = UserRoleDto.USER;
 
     @Builder.Default
     private Boolean locked = false;

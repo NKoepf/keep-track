@@ -31,6 +31,7 @@ public class SecurityConfiguration {
         http.authorizeRequests()
                 .antMatchers("/user/register/**").permitAll()
                 .antMatchers(HttpMethod.DELETE, "/user").hasAuthority("ADMIN")
+                .antMatchers(HttpMethod.PATCH, "/user/role").hasAuthority("ADMIN")
             .and()
                 .authorizeRequests()
                 .anyRequest().authenticated()
