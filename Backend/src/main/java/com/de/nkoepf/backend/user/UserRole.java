@@ -1,5 +1,5 @@
 package com.de.nkoepf.backend.user;
 
-enum UserRole {
+public enum UserRole {
     ADMIN, USER
 }

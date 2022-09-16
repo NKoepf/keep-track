@@ -5,8 +5,8 @@ import com.de.nkoepf.backend.token.ConfirmationToken;
 import com.de.nkoepf.backend.token.ConfirmationTokenService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.mail.SimpleMailMessage;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -68,30 +68,62 @@ public class UserService implements UserDetailsService {
         confirmationTokenService.deleteConfirmationToken(confirmationToken.getId());
     }
 
+
+    public void removeUser(String email) {
+        userRepository.deleteByEmail(email);
+    }
+
     void sendConfirmationMail(String userMail, String token) {
         final SimpleMailMessage mailMessage = new SimpleMailMessage();
         mailMessage.setTo(userMail);
         mailMessage.setSubject("Mail Confirmation Link!");
         mailMessage.setFrom("<MAIL>");
         mailMessage.setText(
-                "Thank you for registering. Please click on the below link to activate your account." + "http://localhost:8001/api/sign-up/confirm?token="
+                "Thank you for registering. Please click on the below link to activate your account." + "http://localhost:8001/api/user/register/confirm?token="
                         + token);
         emailSenderService.sendEmail(mailMessage);
     }
 
+    public UsernamePasswordAuthenticationToken tryGetUserPassAuthToken(String email, String password) {
+        Optional<StorageUser> user = userRepository.findByEmail(email);
+        if (user.isEmpty()) throw new BadCredentialsException(email);
+        UsernamePasswordAuthenticationToken token =
+                new UsernamePasswordAuthenticationToken(email, password, user.get().getAuthorities());
+        if (!isAuthenticated(user.get(), email, password)) token.setAuthenticated(false);
+        return token;
+    }
+
+//    /***
+//     * Checks if token of request is still valid
+//     * @param token contains credentials of token request. Checks if current token is still valid
+//     * @return token with authenticated flag, according to authentication status of user
+//     */
+//    public Authentication isAuthenticated(UsernamePasswordAuthenticationToken token) {
+//        Optional<StorageUser> user = userRepository.findByEmail(token.getPrincipal().toString());
+//        if (user.isEmpty()
+//                || !user.get().getEmail().equals(token.getPrincipal().toString())
+//                || !bCryptPasswordEncoder.matches(token.getCredentials().toString(), user.get().getPassword())
+//                || !Boolean.TRUE.equals(user.get().getEnabled())) {
+//            token.setAuthenticated(false);
+//        }
+//        return token;
+//    }
+
     /***
      * Checks if token of request is still valid
-     * @param token contains credentials of token request. Checks if current token is still valid
-     * @return token with authenticated flag, according to authentication status of user
+     * @param user user in the system corresponding to the given mail address
+     * @param email email of the requesting user
+     * @param password password of the requesting user
+     * @return boolean if user given token is valid or invalid (false credentials, expired token or user not yet enabled)
      */
-    public Authentication isAuthenticated(UsernamePasswordAuthenticationToken token) {
-        Optional<StorageUser> user = userRepository.findByEmail(token.getPrincipal().toString());
-        if (user.isEmpty()
-                || !user.get().getEmail().equals(token.getPrincipal().toString())
-                || !bCryptPasswordEncoder.matches(token.getCredentials().toString(), user.get().getPassword())
-                || !Boolean.TRUE.equals(user.get().getEnabled())) {
-            token.setAuthenticated(false);
+    public boolean isAuthenticated(StorageUser user, String email, String password) {
+        boolean pass = bCryptPasswordEncoder.matches(password, user.getPassword());
+
+        if (!user.getEmail().equals(email)
+                || !bCryptPasswordEncoder.matches(password, user.getPassword())
+                || !Boolean.TRUE.equals(user.getEnabled())) {
+            return false;
         }
-        return token;
+        return true;
     }
 }

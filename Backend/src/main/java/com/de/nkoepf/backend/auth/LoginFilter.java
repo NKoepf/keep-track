@@ -8,7 +8,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -19,7 +18,6 @@ import javax.servlet.FilterChain;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Collections;
 
 @Slf4j
 public class LoginFilter extends AbstractAuthenticationProcessingFilter {
@@ -42,7 +40,7 @@ public class LoginFilter extends AbstractAuthenticationProcessingFilter {
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException, IOException {
         LoginRequestDto loginRequestModel = new ObjectMapper().readValue(request.getInputStream(), LoginRequestDto.class);
         log.info("login attempt for user {}", loginRequestModel.getEmail());
-        return doAuthentication(loginRequestModel.getEmail(), loginRequestModel.getPassword());
+        return userService.tryGetUserPassAuthToken(loginRequestModel.getEmail(), loginRequestModel.getPassword());
     }
 
     @Override
@@ -61,6 +59,7 @@ public class LoginFilter extends AbstractAuthenticationProcessingFilter {
                     .email(userDetails.getUsername())
                     .surName(((StorageUser) userDetails).getSurname())
                     .name(((StorageUser) userDetails).getName())
+                    .authorities(userDetails.getAuthorities())
                     .build();
 
             final String jwt = jwtUtil.generateToken(userTokenData);
@@ -76,11 +75,6 @@ public class LoginFilter extends AbstractAuthenticationProcessingFilter {
             response.getWriter().write(body);
             response.getWriter().flush();
         }
-    }
-
-    private Authentication doAuthentication(String username, String password) {
-        UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(username, password, Collections.emptyList());
-        return userService.isAuthenticated(token);
     }
 
 }

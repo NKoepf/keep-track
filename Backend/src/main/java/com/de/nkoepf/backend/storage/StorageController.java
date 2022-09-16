@@ -30,6 +30,10 @@ public class StorageController implements StorageApi {
         } catch (NoSuchElementException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
+    }
 
+    @Override
+    public ResponseEntity<String> addStorageForUser(String storageName) {
+        return StorageApi.super.addStorageForUser(storageName);
     }
 }

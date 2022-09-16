@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.transaction.Transactional;
 import java.util.Optional;
 
 @RestController
@@ -39,5 +40,12 @@ public class UserController implements UserApi {
         } else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("User not registered or already confirmed");
         }
+    }
+
+    @Override
+    @Transactional
+    public ResponseEntity<String> removeUser(String email) {
+        userService.removeUser(email);
+        return ResponseEntity.ok("User " + email + " successfully removed");
     }
 }

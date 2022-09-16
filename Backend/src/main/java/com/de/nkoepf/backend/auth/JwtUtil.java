@@ -1,11 +1,14 @@
 package com.de.nkoepf.backend.auth;
 
 import com.de.nkoepf.backend.config.KeepTrackProperties;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.spec.SecretKeySpec;
@@ -17,10 +20,13 @@ import java.util.function.Function;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class JwtUtil {
     private static final String FIRST_NAME = "firstName";
     private static final String LAST_NAME = "lastName";
+    private static final String AUTHORITIES = "authorities";
     private static final int TOKEN_START = 7;
+    private final ObjectMapper mapper;
 
 
     private final KeepTrackProperties keepTrackProperties;
@@ -36,22 +42,13 @@ public class JwtUtil {
     public Date extractExpiration(String token) {
         return extractClaim(token, Claims::getExpiration);
     }
-//
-//    public List<String> extractAuthorities(String token) {
-//        return extractClaim(token, (Claims claims) -> claims.get(AUTHORITIES_CLAIM_NAME, List.class));
-//    }
-//
-//    public List<String> extractTeams(String token) {
-//        return extractClaim(token, (Claims claims) -> claims.get(TEAM_NAME, List.class));
-//    }
 
-//    public List<String> extractRoles(String token) {
-//        token = token.substring(TOKEN_START);
-//        return extractAuthorities(token).stream()
-//                .map(role -> role.replace("ROLE_", ""))
-//                .map(String::toLowerCase)
-//                .toList();
-//    }
+    public List<SimpleGrantedAuthority> extractAuthorities(String token) {
+        final Claims claims = extractAllClaims(token);
+        List<LinkedHashMap<String, String>> auths = (ArrayList<LinkedHashMap<String, String>>) claims.get(AUTHORITIES);
+        String role = auths.get(0).get("authority");
+        return Arrays.asList(new SimpleGrantedAuthority(role));
+    }
 
     public String convertEntriesToString(List<String> entriesList) {
         String entries = entriesList.toString();
@@ -69,6 +66,7 @@ public class JwtUtil {
         Map<String, Object> claims = new HashMap<>();
         claims.put(FIRST_NAME, userTokenData.getName());
         claims.put(LAST_NAME, userTokenData.getSurName());
+        claims.put(AUTHORITIES, userTokenData.getAuthorities());
         return createToken(claims, userTokenData.getEmail());
     }
 

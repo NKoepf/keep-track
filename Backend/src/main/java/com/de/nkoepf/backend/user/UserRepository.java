@@ -9,4 +9,6 @@ public interface UserRepository extends CrudRepository<StorageUser, Long> {
     Optional<StorageUser> findByEmail(String email);
 
     Boolean existsByEmail(String email);
+
+    void deleteByEmail(String email);
 }
