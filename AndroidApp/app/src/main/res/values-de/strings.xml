@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Android App</string>
+    <string name="edit_message">Nachricht eingeben</string>
+    <string name="button_send">Senden</string>
+</resources>

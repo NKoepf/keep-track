@@ -14,14 +14,9 @@ management:
 spring:
   application:
     name: Keep-Track
-  jpa:
-    database: postgresql
-    database-platform: org.hibernate.dialect.PostgreSQL95Dialect
-    generate-ddl: true
-    hibernate:
-      ddl-auto: update
+
   datasource:
-    url: jdbc:postgresql://localhost:5432/keep_track
+    url: jdbc:postgresql://online-order-db:5432/keepTrack
     username: postgres
     password: pWnWXMJqqQFmLVGy7KmN
     driverClassName: org.postgresql.Driver
@@ -42,6 +37,8 @@ spring:
           connectiontimeout: 5000
           timeout: 3000
           writetimeout: 5000
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
 springdoc:
   swagger-ui:
     path: /swagger
