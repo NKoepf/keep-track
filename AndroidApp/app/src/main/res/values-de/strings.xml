@@ -3,4 +3,5 @@
     <string name="app_name">Android App</string>
     <string name="edit_message">Nachricht eingeben</string>
     <string name="button_send">Senden</string>
+    <string name="button_next">Weiter</string>
 </resources>
