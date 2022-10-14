@@ -20,16 +20,15 @@
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
 
-        android:background="?attr/colorPrimary"
-        android:backgroundTint="?attr/colorPrimary"
+        android:background="?attr/colorSurfaceVariant"
         app:layout_anchor="@+id/appBarLayout"
         app:layout_anchorGravity="center"
         app:menu="@menu/top_app_bar"
         app:navigationIcon="@drawable/ic_baseline_menu_24"
-        app:navigationIconTint="?attr/colorOnPrimary"
+        app:navigationIconTint="?attr/colorOnSurfaceVariant"
         app:title="Keep Track"
 
         app:titleCentered="true"
-        app:titleTextColor="?attr/colorOnPrimary" />
+        app:titleTextColor="?attr/colorOnSurfaceVariant" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
