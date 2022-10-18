@@ -1,5 +1,6 @@
 pluginManagement {
     repositories {
+        maven { url "https://plugins.gradle.org/m2/" }
         gradlePluginPortal()
         google()
         mavenCentral()
@@ -12,5 +13,5 @@ dependencyResolutionManagement {
         mavenCentral()
     }
 }
-rootProject.name = "Android App"
+rootProject.name = "Keep Track"
 include ':app'
