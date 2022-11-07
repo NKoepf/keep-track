@@ -3,8 +3,6 @@ package de.nkoepf.keeptrack.androidapp;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -26,13 +24,7 @@ public class DisplayMessageActivity extends AppCompatActivity {
         TextView textView = findViewById(R.id.welcome_message);
         textView.setText(String.format(getString(R.string.user_logged_in_message), userName));
 
-        View storageOverViewButton = findViewById(R.id.floatingActionButton);
-
-
-        storageOverViewButton.setOnClickListener(button -> {
-            getLayoutInflater().inflate(R.layout.storage_overview, (ViewGroup) findViewById(R.id.putHere));
-        });
-
+        View storageOverViewButton = findViewById(R.id.addStorageButton);
 
     }
 

@@ -3,8 +3,10 @@ info:
   title: Keep-Track API
   description: Keep-Track API
   version: 1.0.0
-
+servers:
+  - url: http://localhost:8001/api
 paths:
+
   # product controller
   /product:
     get:
@@ -321,6 +323,26 @@ paths:
           description: Server error
 
   # user controller
+  /login:
+    post:
+      tags:
+        - User
+      operationId: login
+      description: log user in
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200':
+          description: token which authenticates user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginResponse'
+
   /user:
     delete:
       tags:
