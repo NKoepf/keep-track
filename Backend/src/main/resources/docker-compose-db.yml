@@ -1,0 +1,22 @@
+version: "3"
+
+services:
+  keep-track-db:
+    container_name: keep-track-db
+    image: postgres:15-alpine
+    environment:
+      - POSTGRES_PASSWORD=zG5&&4sv+Hgtt=8iZZsLV8HHg4?zG
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=keep_track
+    volumes:
+      - keep_track_data:/var/lib/postgresql/data
+    networks:
+      - keep-track
+    restart: no
+
+volumes:
+  keep_track_data:
+
+networks:
+  keep_track:
+    external: true
